@@ -37,6 +37,8 @@ namespace Examen2_EP
                 MessageBox.Show("Usuario Correcto.");
             }
 
+
+
             //FrmProductos frmProductos = new FrmProductos();
             //frmProductos.Show();
             //this.Hide();
@@ -44,6 +46,11 @@ namespace Examen2_EP
             FrmPedidos frmPedidos = new FrmPedidos();
             frmPedidos.Show();
             this.Hide();
+
+
+
+            //FormMenu formMenu = new FormMenu();
+            //formMenu.Show(this);
 
         }
 

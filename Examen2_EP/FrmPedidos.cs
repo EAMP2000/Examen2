@@ -1,4 +1,5 @@
-﻿using Examen2_EP.Accesos;
+﻿
+using Examen2_EP.Accesos;
 using Examen2_EP.Entidades;
 using System;
 using System.Collections.Generic;
@@ -19,20 +20,20 @@ namespace Examen2_EP
             InitializeComponent();
         }
 
-        string Operacion = "";
+        ProductoDA productoDA = new ProductoDA();
+        Pedido pedidos = new Pedido();
+        Producto producto;
         PedidoDA pedidoDA = new PedidoDA();
+
+        List<Pedido> PedidosLista = new List<Pedido>();
+
 
         private void Cancelarbutton_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private void NuevoButton_Click(object sender, EventArgs e)
-        {
-            Operacion = "Nuevo";
-            HabilitarControles();
-        }
-
+ 
         private void GuardarButton_Click(object sender, EventArgs e)
         {
             try
@@ -51,38 +52,31 @@ namespace Examen2_EP
                     return;
                 }
 
-                if (string.IsNullOrEmpty(PrecioTextBox.Text))
-                {
-                    errorProvider1.SetError(PrecioTextBox, "Ingrese el Precio del pedido.");
-                    PrecioTextBox.Focus();
-                    return;
-                }
+
 
 
                 Pedido pedido = new Pedido();
-                pedido.CodigoPedido = Convert.ToInt32(CodigoPedidoTextBox.Text);
-                pedido.CodigoProducto = Convert.ToInt32(CodigoProductoTextBox.Text);
-                pedido.Descripcion = DescripcionTextBox.Text;
-                pedido.Precio = Convert.ToDecimal(PrecioTextBox.Text);
+                pedido.CodigoProducto = producto.CodigoProducto;
+                pedido.Descripcion = producto.Descripcion;
                 pedido.Cantidad = Convert.ToInt32(CantidadTextBox.Text);
-                pedido.Total = Convert.ToDecimal(TotalTextBox.Text);
+                pedido.Precio = producto.Precio;
+                pedido.Total=producto.Precio * Convert.ToInt32(CantidadTextBox.Text);
                 pedido.Cliente = ClienteTextBox.Text;
 
 
+                PedidosLista.Add(pedido);
+                PedidosDataGridView.DataSource = null;
+                PedidosDataGridView.DataSource = PedidosLista;
 
-                if (Operacion == "Nuevo")
-                {
-                    bool Insertado = pedidoDA.InsertarPedido(pedido);
 
-                    if (Insertado)
+                    foreach (var item in PedidosLista)
                     {
-                        DeshabilitarControles();
-                        LimpiarControles();
-                        ListarPedidos();
-                        MessageBox.Show("Producto Agregado Exitosamente.");
-
+                        pedidoDA.InsertarPedido(item);
                     }
-                }
+                
+
+            
+
 
             }
             catch (Exception ex)
@@ -90,6 +84,7 @@ namespace Examen2_EP
 
 
             }
+            DeshabilitarControles();
         }
 
 
@@ -98,12 +93,10 @@ namespace Examen2_EP
 
         private void HabilitarControles()
         {
-            CodigoPedidoTextBox.Enabled = true;
+            NoTextBox.Enabled = true;
             CodigoProductoTextBox.Enabled = true;
             DescripcionTextBox.Enabled = true;
-            CantidadTextBox.Enabled = true;
-            PrecioTextBox.Enabled = true;
-            TotalTextBox.Enabled = true;    
+            CantidadTextBox.Enabled = true;   
             ClienteTextBox.Enabled = true;
 
             GuardarButton.Enabled = true;
@@ -114,29 +107,36 @@ namespace Examen2_EP
 
         private void DeshabilitarControles()
         {
-            CodigoPedidoTextBox.Enabled = false;
+            NoTextBox.Enabled = false;
             CodigoProductoTextBox.Enabled = false;
             DescripcionTextBox.Enabled = false;
             CantidadTextBox.Enabled = false;
-            PrecioTextBox.Enabled = false;
-            TotalTextBox.Enabled = false;
+
             ClienteTextBox.Enabled = false;
 
-            GuardarButton.Enabled = false;
+        
             Cancelarbutton.Enabled = false;
             NuevoButton.Enabled = true;
         }
 
         private void LimpiarControles()
         {
-            CodigoPedidoTextBox.Clear();
+            NoTextBox.Clear();
             CodigoProductoTextBox.Clear();
-            PrecioTextBox.Clear();
             ClienteTextBox.Clear();
             DescripcionTextBox.Clear();
             CantidadTextBox.Clear();
-            PrecioTextBox.Clear();
-            TotalTextBox.Clear();
+            NoTextBox.Focus();
+
+        }
+
+
+
+        private void FrmPedidos_Load(object sender, EventArgs e)
+        {
+            PedidosDataGridView.DataSource = PedidosLista;
+            ListarPedidos();
+            
         }
 
         private void ListarPedidos()
@@ -144,32 +144,28 @@ namespace Examen2_EP
             PedidosDataGridView.DataSource = pedidoDA.ListarPedidos();
         }
 
-        private void Eliminarbutton_Click(object sender, EventArgs e)
+        private void CodigoProductoTextBox_KeyPress(object sender, KeyPressEventArgs e)
         {
-            if (PedidosDataGridView.SelectedRows.Count > 0)
+            if (e.KeyChar == (char)Keys.Enter)
             {
-                bool Eliminado = pedidoDA.EliminarPedido(PedidosDataGridView.CurrentRow.Cells["CodigoProducto"].Value.ToString());
-
-                if (Eliminado) //se entiende como TRUE
-                {
-                    MessageBox.Show("Producto  eliminado Exitosamente", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    ListarPedidos();
-                }
-                else
-                {
-                    MessageBox.Show("Producto  no eliminado ", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-
+                producto = new Producto();
+                producto = productoDA.GetProductoPorCodigo(CodigoProductoTextBox.Text);
+                DescripcionTextBox.Text = producto.Descripcion;
+                ClienteTextBox.Focus();
             }
             else
             {
-                MessageBox.Show("Debe seleccionar un producto.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                producto = null;
+                DescripcionTextBox.Clear();
+                CantidadTextBox.Clear();
             }
+
         }
 
-        private void FrmPedidos_Load(object sender, EventArgs e)
+        private void NuevoButton_Click(object sender, EventArgs e)
         {
-            ListarPedidos();
+            LimpiarControles();
+            HabilitarControles();
         }
     }
 }

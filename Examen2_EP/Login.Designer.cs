@@ -67,6 +67,7 @@
             // 
             this.ClaveTextBox.Location = new System.Drawing.Point(89, 78);
             this.ClaveTextBox.Name = "ClaveTextBox";
+            this.ClaveTextBox.PasswordChar = '*';
             this.ClaveTextBox.Size = new System.Drawing.Size(130, 20);
             this.ClaveTextBox.TabIndex = 4;
             this.ClaveTextBox.Text = "1234";

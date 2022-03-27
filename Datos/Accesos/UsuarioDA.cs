@@ -11,6 +11,7 @@ namespace Examen2_EP.Accesos
     public class UsuarioDA
     {
         readonly string Cadena = "Server=localhost; Port=3306; Database=Examen2; Uid=root; Pwd=123456789;";
+        
 
         MySqlConnection conexion;
         MySqlCommand comando;

@@ -12,10 +12,10 @@ namespace Examen2_EP.Accesos
     public class PedidoDA
     {
         readonly string Cadena = "Server=localhost; Port=3306; Database=Examen2; Uid=root; Pwd=123456789;";
+        
 
         MySqlConnection conexion;
         MySqlCommand comando;
-        //Un Data table permite traer un listado de una consulta de una BD,se importa el using
 
         public DataTable ListarPedidos()
         {
@@ -43,13 +43,15 @@ namespace Examen2_EP.Accesos
         public bool InsertarPedido(Pedido pedido)
         {
             bool Insertado = false;
+            //cod, cliente, desc, cantidad
             try
             {
-                string sql = "INSERT INTO Pedido VALUES (@CodigoPedido, @CodigoProducto, @Descripcion, @Cantidad, @Precio, @Total, @Cliente)";
+                string sql = "INSERT INTO pedido (CodigoPedido,CodigoProducto, Descripcion, Cantidad, Precio, Total, Cliente) VALUES (@CodigoPedido, @CodigoProducto, @Descripcion, @Cantidad, @Precio, @Total, @Cliente);";
                 conexion = new MySqlConnection(Cadena);
                 conexion.Open();
                 comando = new MySqlCommand(sql, conexion);
                 //se mandan como parametros todas las propiedades de un objeto producto
+
                 comando.Parameters.AddWithValue("@CodigoPedido", pedido.CodigoPedido);
                 comando.Parameters.AddWithValue("@CodigoProducto", pedido.CodigoProducto);
                 comando.Parameters.AddWithValue("@Descripcion", pedido.Descripcion);
@@ -98,5 +100,7 @@ namespace Examen2_EP.Accesos
 
             return Eliminado;
         }
+
+        
     }
 }

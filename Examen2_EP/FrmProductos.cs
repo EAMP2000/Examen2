@@ -166,25 +166,25 @@ namespace Examen2_EP
             }
         }
 
-        private void Modificarbutton_Click(object sender, EventArgs e)
-        {
-            Operacion = "Modificar";
+        //private void Modificarbutton_Click(object sender, EventArgs e)
+        //{
+        //    Operacion = "Modificar";
 
-            if (ProductosDataGridView1.SelectedRows.Count > 0)
-            {
-                CodigoProductoTextBox.Text = ProductosDataGridView1.CurrentRow.Cells["CodigoProducto"].Value.ToString();
-                DescripcionTextBox.Text = ProductosDataGridView1.CurrentRow.Cells["Descripcion"].Value.ToString(); ;
-                PrecioTextBox.Text = ProductosDataGridView1.CurrentRow.Cells["Precio"].Value.ToString(); ;
-                ExistenciasTextBox.Text = ProductosDataGridView1.CurrentRow.Cells["Existencias"].Value.ToString(); ;
+        //    if (ProductosDataGridView1.SelectedRows.Count > 0)
+        //    {
+        //        CodigoProductoTextBox.Text = ProductosDataGridView1.CurrentRow.Cells["CodigoProducto"].Value.ToString();
+        //        DescripcionTextBox.Text = ProductosDataGridView1.CurrentRow.Cells["Descripcion"].Value.ToString(); ;
+        //        PrecioTextBox.Text = ProductosDataGridView1.CurrentRow.Cells["Precio"].Value.ToString(); ;
+        //        ExistenciasTextBox.Text = ProductosDataGridView1.CurrentRow.Cells["Existencias"].Value.ToString(); ;
 
-                HabilitarControles();
-                CodigoProductoTextBox.Focus();
-            }
-            else
-            {
-                MessageBox.Show("Seleccione el producto");
-            }
-        }
+        //        HabilitarControles();
+        //        CodigoProductoTextBox.Focus();
+        //    }
+        //    else
+        //    {
+        //        MessageBox.Show("Seleccione el producto");
+        //    }
+        //}
 
         private void Eliminarbutton_Click(object sender, EventArgs e)
         {
@@ -211,6 +211,8 @@ namespace Examen2_EP
 
         private void FrmProductos_Load(object sender, EventArgs e)
         {
+            Guardarbutton.Enabled = false;
+            CancelarButton.Enabled = true;
             ListarProductos();
         }
     }

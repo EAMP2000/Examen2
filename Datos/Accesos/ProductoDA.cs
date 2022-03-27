@@ -128,5 +128,49 @@ namespace Examen2_EP.Accesos
 
             return Eliminado;
         }
+
+
+        public Producto GetProductoPorCodigo(string codigo)
+        {
+            Producto producto = new Producto();
+            try
+            {
+                string sql = "SELECT * FROM  producto WHERE CodigoProducto=@CodigoProducto;";
+
+                conexion = new MySqlConnection(Cadena);
+                conexion.Open();
+
+                comando = new MySqlCommand(sql, conexion);
+                comando.Parameters.AddWithValue("@CodigoProducto", codigo);
+                MySqlDataReader reader = comando.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    producto.CodigoProducto =Convert.ToInt32(reader["CodigoProducto"]);
+                    producto.Descripcion = reader["Descripcion"].ToString();
+                    producto.Precio = Convert.ToDecimal(reader["Precio"]);
+                    producto.Existencias = Convert.ToInt32(reader["Existencias"].ToString());
+                }
+
+                conexion.Close();
+
+            }
+            catch (Exception)
+            {
+            }
+
+            return producto;
+        }
+
+
+
+
+
+
+
+
+
+
+
     }
 }
